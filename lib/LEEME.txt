@@ -1,0 +1,4 @@
+# Dependencias JavaFX (OpenJFX 21)
+# Si la carpeta lib/ está vacía, descarga el SDK desde:
+# https://gluonhq.com/products/javafx/
+# y copia el contenido de javafx-sdk-21/lib/ aquí.

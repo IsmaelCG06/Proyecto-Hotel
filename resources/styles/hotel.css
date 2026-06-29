@@ -1,0 +1,294 @@
+/* Paleta inspirada en Booking.com y sitios hoteleros */
+
+.root {
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: #f5f7fa;
+}
+
+.header-bar {
+    -fx-background-color: #003580;
+    -fx-padding: 16 24;
+}
+
+.header-title {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.header-subtitle {
+    -fx-text-fill: #b4d4f0;
+    -fx-font-size: 12px;
+}
+
+.sidebar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e7e7e7;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 12;
+    -fx-spacing: 6;
+}
+
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #333333;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 16;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-background-radius: 6;
+}
+
+.menu-button:hover {
+    -fx-background-color: #ebf3ff;
+    -fx-text-fill: #003580;
+}
+
+.menu-button-active {
+    -fx-background-color: #003580;
+    -fx-text-fill: white;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 16;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+}
+
+.content-area {
+    -fx-background-color: #f5f7fa;
+    -fx-padding: 24;
+}
+
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #003580;
+}
+
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #e7e7e7;
+    -fx-border-radius: 8;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+
+.card .label {
+    -fx-text-fill: #333333;
+}
+
+.btn-primary {
+    -fx-background-color: #0071c2;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #003580;
+}
+
+.btn-accent {
+    -fx-background-color: #febb02;
+    -fx-text-fill: #003580;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-accent:hover {
+    -fx-background-color: #e5a800;
+}
+
+.btn-danger {
+    -fx-background-color: #cc0000;
+    -fx-text-fill: white;
+    -fx-padding: 8 16;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-secondary {
+    -fx-background-color: white;
+    -fx-text-fill: #0071c2;
+    -fx-border-color: #0071c2;
+    -fx-border-width: 1;
+    -fx-padding: 8 16;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #e7e7e7;
+    -fx-border-radius: 6;
+}
+
+.table-view .table-row-cell {
+    -fx-text-fill: #333333;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: #f9fbfd;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #0071c2;
+}
+
+.table-view .table-row-cell:selected .text {
+    -fx-fill: white;
+}
+
+.table-view:focused .table-row-cell:selected {
+    -fx-background-color: #003580;
+}
+
+.table-view:focused .table-row-cell:selected .text {
+    -fx-fill: white;
+}
+
+.table-view .table-row-cell:filled:selected {
+    -fx-background-color: #0071c2;
+}
+
+.table-view .table-row-cell:filled:selected .text {
+    -fx-fill: white;
+}
+
+.table-view .column-header {
+    -fx-background-color: #003580;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.room-gallery {
+    -fx-spacing: 8;
+    -fx-padding: 10;
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #e7e7e7;
+    -fx-border-radius: 8;
+    -fx-alignment: top-center;
+    -fx-max-width: infinity;
+}
+
+.image-center-box {
+    -fx-alignment: center;
+    -fx-background-color: #f9fbfd;
+    -fx-background-radius: 6;
+    -fx-min-height: 220;
+    -fx-pref-height: 220;
+}
+
+.room-detail-label {
+    -fx-text-fill: #333333;
+    -fx-font-size: 12px;
+    -fx-wrap-text: true;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+.panel-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.panel-scroll > .viewport {
+    -fx-background-color: #f5f7fa;
+}
+
+.panel-scroll .scroll-bar:vertical {
+    -fx-background-color: #f0f0f0;
+}
+
+.panel-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #0071c2;
+    -fx-background-radius: 4;
+}
+
+.thumbnail-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.thumbnail {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
+}
+
+.text-field, .combo-box, .date-picker, .spinner, .list-view {
+    -fx-background-radius: 4;
+    -fx-border-color: #949494;
+    -fx-border-radius: 4;
+    -fx-padding: 6;
+}
+
+.label-field {
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+}
+
+.form-checkbox {
+    -fx-text-fill: #333333;
+}
+
+.form-checkbox .label {
+    -fx-text-fill: #333333;
+}
+
+.status-disponible {
+    -fx-text-fill: #008009;
+    -fx-font-weight: bold;
+}
+
+.status-ocupada {
+    -fx-text-fill: #cc0000;
+    -fx-font-weight: bold;
+}
+
+.factura-area {
+    -fx-control-inner-background: #fafafa;
+    -fx-font-family: "Consolas", monospace;
+    -fx-font-size: 12px;
+}
+
+.room-image {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0, 0, 2);
+    -fx-background-radius: 6;
+}
+
+.price-tag {
+    -fx-text-fill: #003580;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.login-root {
+    -fx-background-color: #f5f7fa;
+}
+
+.login-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #e7e7e7;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+}
+
+.login-subtitle {
+    -fx-text-fill: #555555;
+    -fx-font-size: 13px;
+}
+
+.login-hint {
+    -fx-text-fill: #0071c2;
+    -fx-font-size: 12px;
+}

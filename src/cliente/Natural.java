@@ -6,6 +6,8 @@ package cliente;
  */
 public class Natural extends Cliente {
 
+    private static final long serialVersionUID = 1L;
+
     private int cedula;
 
     public Natural(String nombre, String tipoIdentificacion, String contacto,
@@ -34,30 +36,6 @@ public class Natural extends Cliente {
                "\nContacto     : " + contacto +
                "\nHabitual     : " + (esHabitual ? "Sí" : "No") +
                "\nDescuento    : " + descuento + "%";
-    }
-
-    /**
-     * Formato para guardar en archivo .txt
-     * Separado por | para fácil lectura al cargar
-     */
-    public String toArchivoTxt() {
-        return "NATURAL|" + nombre + "|" + cedula + "|" + contacto
-               + "|" + esHabitual + "|" + descuento;
-    }
-
-    /**
-     * Reconstruye un Natural desde una línea del archivo .txt
-     */
-    public static Natural fromArchivoTxt(String linea) {
-        String[] partes = linea.split("\\|");
-        String nombre = partes[1];
-        int cedula = Integer.parseInt(partes[2]);
-        String contacto = partes[3];
-        boolean esHabitual = Boolean.parseBoolean(partes[4]);
-        double descuento = Double.parseDouble(partes[5]);
-        Natural n = new Natural(nombre, "Cédula", contacto, esHabitual, cedula);
-        n.setDescuento(descuento);
-        return n;
     }
 
     @Override

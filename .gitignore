@@ -1,0 +1,10 @@
+# .gitignore
+
+nbproject/private/
+build/
+dist/
+datos/
+documentacion/
+resources/images/
+debug*.log
+*.class

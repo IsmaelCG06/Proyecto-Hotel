@@ -1,0 +1,123 @@
+================================================================================
+  PROYECTO HOTEL - INSTRUCCIONES PARA EJECUTAR DESDE CMD (Windows)
+================================================================================
+
+REQUISITOS
+----------
+1. Java 21 (JDK) instalado.
+   Verificar en CMD:
+     java -version
+     javac -version
+
+2. Carpeta lib/ con OpenJFX 21 (JARs y DLLs del SDK).
+   Si lib/ esta vacia, descarga JavaFX 21 desde:
+     https://gluonhq.com/products/javafx/
+   Copia el contenido de javafx-sdk-21\lib\ dentro de lib\ del proyecto.
+
+3. Carpeta resources\images\ (OBLIGATORIA).
+   El programa busca las fotos de habitaciones en:
+     resources\images\
+   Si no existe, la galeria y la lista de imagenes del formulario fallan
+   o quedan vacias. Crea la carpeta antes de ejecutar:
+
+     mkdir resources\images
+
+   Luego agrega fotos JPG, PNG o GIF con nombres simples (sin caracteres
+   raros si posible). Ejemplo: matrimonial.png, doble_vista_mar.png
+
+
+PRIMER USO - PREPARAR EL PROYECTO
+---------------------------------
+Abre CMD y ve a la carpeta del proyecto (la que contiene src, lib, build.xml):
+
+  cd C:\ruta\a\Proyecto Hotel
+
+Crea la carpeta de imagenes si no existe:
+
+  mkdir resources\images
+
+Compila todo el codigo (solo la primera vez o tras cambiar Java):
+
+  javac --module-path lib --add-modules javafx.controls,javafx.fxml -d build\classes -sourcepath src -encoding UTF-8 src\hotel\Hotel.java src\cliente\*.java src\habitacion\*.java src\reserva\*.java src\factura\*.java src\persistencia\*.java src\administrador\*.java src\ui\*.java
+
+
+EJECUTAR EL PROGRAMA
+--------------------
+Desde la misma carpeta del proyecto (raiz), ejecuta:
+
+  java --module-path lib --add-modules javafx.controls,javafx.fxml -Djava.library.path=lib -cp build\classes ui.MainApp
+
+IMPORTANTE: el CMD debe estar en la raiz del proyecto al ejecutar java.
+Los archivos resources\images\ y datos\ se leen con rutas relativas desde
+ahi, no desde build\classes.
+
+
+OTRA PC (clonar o copiar el repo)
+---------------------------------
+1. Copiar o clonar el proyecto completo (incluye lib\ con JavaFX).
+2. Instalar Java 21 en esa PC.
+3. Abrir CMD en la raiz del proyecto.
+4. mkdir resources\images   (y subir tus fotos)
+5. Compilar (comando javac de arriba).
+6. Ejecutar (comando java de arriba).
+
+
+NETBEANS (opcional)
+-------------------
+Abrir el proyecto en NetBeans y usar Run (F6). NetBeans usa la misma
+configuracion de lib\ y JavaFX. Aun asi, crea resources\images\ con fotos.
+
+
+DATOS DEL HOTEL
+---------------
+Los datos guardados van en la carpeta datos\ (no se sube al repositorio):
+  - hotel.dat          datos del hotel (habitaciones, clientes, reservas...)
+  - administradores.dat usuarios que pueden entrar al sistema
+
+ACCESO AL SISTEMA
+-----------------
+Al iniciar, el programa pide ID y contraseña de administrador.
+La primera vez se crea un usuario por defecto:
+  ID: admin
+  Contraseña: admin123
+
+Los usuarios se guardan en datos\administradores.dat (binario, no editar manualmente).
+
+
+CAMBIAR EL NOMBRE DEL HOTEL (sin borrar habitaciones/clientes/reservas)
+-----------------------------------------------------------------------
+El nombre NO está en un archivo de texto: está dentro de datos\hotel.dat.
+
+Archivo a editar: src\ui\MainApp.java
+Método: iniciarSistema()
+Pasos:
+  1. Abre MainApp.java y busca iniciarSistema().
+  2. Justo después de hotel = Hotel.cargarDesdeArchivo(); descomenta:
+       hotel.setNombre("Nombre de tu hotel");
+       hotel.guardarEnArchivo();
+  3. Compila, ejecuta la app, entra con tu admin y revisa el encabezado azul.
+  4. Vuelve a comentar esas líneas (el nombre ya quedó guardado en hotel.dat).
+
+No borres datos\hotel.dat si quieres conservar los datos registrados.
+
+
+CREAR UNA NUEVA CUENTA DE ADMINISTRADOR
+---------------------------------------
+Archivo a editar: src\ui\PanelLogin.java
+Método: mostrar()
+Pasos:
+  1. Abre PanelLogin.java y busca el método mostrar().
+  2. Justo después de GestorAdministradores.cargar(); descomenta y adapta:
+       gestor.registrarAdministrador(
+           new Administrador("recepcion", "clave123", "Recepción"));
+     Cambia "recepcion", "clave123" y "Recepción" por lo que quieras.
+     El ID no puede repetir uno que ya exista.
+  3. Compila y ejecuta la app una vez (no necesitas iniciar sesión).
+  4. Vuelve a comentar la línea.
+  5. Entra con el nuevo ID y contraseña.
+
+Alternativa (código): src\administrador\GestorAdministradores.java
+  Método registrarAdministrador(Administrador nuevo) — puedes llamarlo
+  desde cualquier parte del programa tras GestorAdministradores.cargar().
+
+================================================================================

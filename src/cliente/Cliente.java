@@ -8,6 +8,8 @@ import java.io.Serializable;
  */
 public abstract class Cliente implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     // Atributos protegidos (accesibles por subclases)
     protected String nombre;
     protected String tipoIdentificacion;
@@ -58,6 +60,11 @@ public abstract class Cliente implements Serializable {
     }
 
     public void setDescuento(double descuento) {
+        //--Cursor IA: solo clientes habituales pueden tener descuento
+        if (!esHabitual) {
+            this.descuento = 0.0;
+            return;
+        }
         if (descuento >= 0 && descuento <= 100) {
             this.descuento = descuento;
         }
@@ -65,6 +72,9 @@ public abstract class Cliente implements Serializable {
 
     public void setEsHabitual(boolean esHabitual) {
         this.esHabitual = esHabitual;
+        if (!esHabitual) {
+            this.descuento = 0.0;
+        }
     }
 
     /**
