@@ -351,6 +351,10 @@ public class MainApp extends Application {
         try {
             String tipo = ((ComboBox<String>) campos[0]).getValue();
             int num = Integer.parseInt(((TextField) campos[1]).getText().trim());
+            if (num <= 0) {
+                mostrarAlerta(Alert.AlertType.WARNING, "El número de la habitación debe ser mayor a cero.");
+                return;
+            }
             String desc = ((TextField) campos[2]).getText().trim();
             double precio = Double.parseDouble(((TextField) campos[3]).getText().trim());
             if (precio <= 0) {

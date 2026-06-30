@@ -121,3 +121,5 @@ Alternativa (código): src\administrador\GestorAdministradores.java
   desde cualquier parte del programa tras GestorAdministradores.cargar().
 
 ================================================================================
+
+Archivos de documentación generados por IA
