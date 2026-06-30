@@ -283,8 +283,6 @@ public class MainApp extends Application {
         cboTipo.setValue("Sencilla");
         cboTipo.setMaxWidth(Double.MAX_VALUE);
         TextField txtNum = new TextField();
-        TextField txtDesc = new TextField();
-        txtDesc.setMaxWidth(Double.MAX_VALUE);
         TextField txtPrecio = new TextField();
         TextField txtCaract = new TextField();
         txtCaract.setMaxWidth(Double.MAX_VALUE);
@@ -302,6 +300,32 @@ public class MainApp extends Application {
         HBox opcionesChk = new HBox(16, chkBanio, chkVistaMar, chkJacuzzi);
         opcionesChk.setAlignment(Pos.CENTER_LEFT);
         GridPane.setHgrow(opcionesChk, Priority.ALWAYS);
+
+        cboTipo.valueProperty().addListener((obs, oldVal, newVal) -> {
+            switch (newVal) {
+                case "Sencilla" -> {
+                    chkVistaMar.setDisable(true);
+                    chkVistaMar.setSelected(false);
+                    chkJacuzzi.setDisable(true);
+                    chkJacuzzi.setSelected(false);
+                    chkBanio.setDisable(false);
+                }
+                case "Doble" -> {
+                    chkVistaMar.setDisable(false);
+                    chkJacuzzi.setDisable(true);
+                    chkJacuzzi.setSelected(false);
+                    chkBanio.setDisable(true);
+                    chkBanio.setSelected(false);
+                }
+                case "Matrimonial" -> {
+                    chkVistaMar.setDisable(false);
+                    chkJacuzzi.setDisable(false);
+                    chkBanio.setDisable(true);
+                    chkBanio.setSelected(false);
+                }
+            }
+        });
+        cboTipo.getSelectionModel().select(0);
 
         VBox boxImagenes = new VBox(4);
         boxImagenes.setFillWidth(true);
@@ -329,12 +353,10 @@ public class MainApp extends Application {
         grid.add(cboTipo, 1, 0);
         grid.add(new Label("Número:"), 2, 0);
         grid.add(txtNum, 3, 0);
-        grid.add(new Label("Descripción:"), 0, 1);
-        grid.add(txtDesc, 1, 1, 3, 1);
+        grid.add(new Label("Características:"), 0, 1);
+        grid.add(txtCaract, 1, 1, 3, 1);
         grid.add(new Label("Precio/noche:"), 0, 2);
         grid.add(txtPrecio, 1, 2);
-        grid.add(new Label("Características:"), 2, 2);
-        grid.add(txtCaract, 3, 2);
         grid.add(new Label("Camas:"), 0, 3);
         grid.add(spnCamas, 1, 3);
         grid.add(lblOpciones, 0, 4);
@@ -342,7 +364,7 @@ public class MainApp extends Application {
         grid.add(new Label("Imágenes:"), 0, 5);
         grid.add(scrollImagenes, 1, 5, 3, 1);
 
-        grid.setUserData(new Object[]{cboTipo, txtNum, txtDesc, txtPrecio, txtCaract,
+        grid.setUserData(new Object[]{cboTipo, txtNum, txtPrecio, txtCaract,
                 spnCamas, chkBanio, chkVistaMar, chkJacuzzi, chkImagenes});
         return grid;
     }
@@ -356,15 +378,24 @@ public class MainApp extends Application {
                 mostrarAlerta(Alert.AlertType.WARNING, "El número de la habitación debe ser mayor a cero.");
                 return;
             }
-            String desc = ((TextField) campos[2]).getText().trim();
-            double precio = Double.parseDouble(((TextField) campos[3]).getText().trim());
+            CheckBox chkBanio = (CheckBox) campos[5];
+            CheckBox chkVistaMar = (CheckBox) campos[6];
+            CheckBox chkJacuzzi = (CheckBox) campos[7];
+            StringBuilder sbDesc = new StringBuilder();
+            if (chkBanio.isSelected()) sbDesc.append("Baño privado, ");
+            if (chkVistaMar.isSelected()) sbDesc.append("Vista al mar, ");
+            if (chkJacuzzi.isSelected()) sbDesc.append("Jacuzzi, ");
+            int camas = ((Spinner<Integer>) campos[4]).getValue();
+            String desc = sbDesc.length() > 0 ? sbDesc.substring(0, sbDesc.length() - 2) : "";
+            if (!desc.isEmpty()) desc += ", ";
+            desc += camas + " cama(s)";
+            double precio = Double.parseDouble(((TextField) campos[2]).getText().trim());
             if (precio <= 0) {
                 mostrarAlerta(Alert.AlertType.WARNING, "El precio por noche debe ser mayor que cero.");
                 return;
             }
-            String caract = ((TextField) campos[4]).getText().trim();
-            int camas = ((Spinner<Integer>) campos[5]).getValue();
-            ArrayList<CheckBox> chkImagenes = (ArrayList<CheckBox>) campos[9];
+            String caract = ((TextField) campos[3]).getText().trim();
+            ArrayList<CheckBox> chkImagenes = (ArrayList<CheckBox>) campos[8];
             ArrayList<String> imagenesSel = new ArrayList<>();
             for (CheckBox cb : chkImagenes) {
                 if (cb.isSelected()) {
@@ -377,11 +408,11 @@ public class MainApp extends Application {
             Habitacion hab;
             switch (tipo) {
                 case "Doble" -> hab = new Doble(num, desc, precio, true, caract, imagen,
-                        camas, ((CheckBox) campos[7]).isSelected());
+                        camas, chkVistaMar.isSelected());
                 case "Matrimonial" -> hab = new Matrimonial(num, desc, precio, true, caract, imagen,
-                        camas, ((CheckBox) campos[7]).isSelected(), ((CheckBox) campos[8]).isSelected());
+                        camas, chkVistaMar.isSelected(), chkJacuzzi.isSelected());
                 default -> hab = new Sencilla(num, desc, precio, true, caract, imagen,
-                        camas, ((CheckBox) campos[6]).isSelected());
+                        camas, chkBanio.isSelected());
             }
 
             if (hotel.registrarHabitacion(hab)) {
@@ -410,12 +441,11 @@ public class MainApp extends Application {
         ((TextField) campos[1]).clear();
         ((TextField) campos[2]).clear();
         ((TextField) campos[3]).clear();
-        ((TextField) campos[4]).clear();
-        ((Spinner<Integer>) campos[5]).getValueFactory().setValue(1);
+        ((Spinner<Integer>) campos[4]).getValueFactory().setValue(1);
+        ((CheckBox) campos[5]).setSelected(false);
         ((CheckBox) campos[6]).setSelected(false);
         ((CheckBox) campos[7]).setSelected(false);
-        ((CheckBox) campos[8]).setSelected(false);
-        ArrayList<CheckBox> chkImagenes = (ArrayList<CheckBox>) campos[9];
+        ArrayList<CheckBox> chkImagenes = (ArrayList<CheckBox>) campos[8];
         for (CheckBox cb : chkImagenes) {
             cb.setSelected(false);
         }
@@ -450,8 +480,7 @@ public class MainApp extends Application {
             return;
         }
         lblDetalleHabitacion.setText(
-                "Descripción: " + hab.getDescripcionBase()
-                + "\nCaracterísticas: " + (hab.getCaracteristica().isEmpty() ? "—" : hab.getCaracteristica())
+                "Características: " + (hab.getCaracteristica().isEmpty() ? "—" : hab.getCaracteristica())
                 + "\nFotos: " + (hab.getImagenesTexto().isEmpty() ? "sin imágenes" : hab.getImagenesTexto()));
 
         ArrayList<String> fotos = hab.getImagenes();
