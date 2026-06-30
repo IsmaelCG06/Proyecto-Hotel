@@ -45,6 +45,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import javafx.scene.control.TextFormatter;
 
 /**
  * Aplicación JavaFX del sistema de gestión hotelera.
@@ -530,7 +531,28 @@ public class MainApp extends Application {
         TextField txtNombre = new TextField();
         TextField txtContacto = new TextField();
         TextField txtId = new TextField();
+        
+        txtId.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getControlNewText().matches("\\d*")) {
+            return change;
+            }
+            return null;
+            }));
+        
         TextField txtRazon = new TextField();
+        txtRazon.setDisable(true);
+
+        cboTipo.valueProperty().addListener((obs, oldValue, newValue) -> {
+            boolean esEmpresario = "Empresario".equals(newValue);
+
+            txtRazon.setDisable(!esEmpresario);
+
+            if (!esEmpresario) {
+                txtRazon.clear();
+            }
+        });
+        
+        
         CheckBox chkHabitual = new CheckBox("Cliente habitual");
         Spinner<Double> spnDesc = new Spinner<>(0.0, 50.0, 0.0, 5.0);
         spnDesc.setDisable(true);
@@ -567,24 +589,72 @@ public class MainApp extends Application {
 
         btnAgregar.setOnAction(e -> {
             try {
-                Cliente c;
-                if ("Empresario".equals(cboTipo.getValue())) {
-                    c = new Empresario(txtNombre.getText(), "NIT", txtContacto.getText(),
-                            chkHabitual.isSelected(), Integer.parseInt(txtId.getText()),
-                            txtRazon.getText());
-                } else {
-                    c = new Natural(txtNombre.getText(), "Cédula", txtContacto.getText(),
-                            chkHabitual.isSelected(), Integer.parseInt(txtId.getText()));
+
+                if (cboTipo.getValue() == null) {
+                    mostrarAlerta(Alert.AlertType.ERROR,
+                            "Debe seleccionar el tipo de cliente.");
+                    return;
                 }
+
+                if (txtNombre.getText().trim().isEmpty()) {
+                    mostrarAlerta(Alert.AlertType.ERROR,
+                            "El nombre es obligatorio.");
+                    return;
+                }
+
+                if (txtContacto.getText().trim().isEmpty()) {
+                    mostrarAlerta(Alert.AlertType.ERROR,
+                            "El contacto es obligatorio.");
+                    return;
+                }
+
+                if (txtId.getText().trim().isEmpty()) {
+                    mostrarAlerta(Alert.AlertType.ERROR,
+                            "La cédula o NIT es obligatoria.");
+                    return;
+                }
+
+                int identificacion = Integer.parseInt(txtId.getText());
+
+                if (identificacion <= 0) {
+                    mostrarAlerta(Alert.AlertType.ERROR,
+                            "La cédula o NIT debe ser mayor que cero.");
+                    return;
+                }
+
+                Cliente c;
+
+                if ("Empresario".equals(cboTipo.getValue())) {
+                    c = new Empresario(
+                            txtNombre.getText(),
+                            "NIT",
+                            txtContacto.getText(),
+                            chkHabitual.isSelected(),
+                            identificacion,
+                            txtRazon.getText() // opcional
+                    );
+                } else {
+                    c = new Natural(
+                            txtNombre.getText(),
+                            "Cédula",
+                            txtContacto.getText(),
+                            chkHabitual.isSelected(),
+                            identificacion
+                    );
+                }
+
                 if (chkHabitual.isSelected()) {
                     c.setDescuento(spnDesc.getValue());
                 }
+
                 String msg = hotel.registrarCliente(c);
+
                 if (msg.startsWith("Ya existe")) {
                     mostrarAlerta(Alert.AlertType.WARNING, msg);
                 } else {
                     mostrarAlerta(Alert.AlertType.INFORMATION, msg);
                     actualizarTablaClientes();
+
                     txtNombre.clear();
                     txtContacto.clear();
                     txtId.clear();
@@ -592,8 +662,10 @@ public class MainApp extends Application {
                     chkHabitual.setSelected(false);
                     spnDesc.getValueFactory().setValue(0.0);
                 }
+
             } catch (Exception ex) {
-                mostrarAlerta(Alert.AlertType.ERROR, "Datos inválidos: " + ex.getMessage());
+                mostrarAlerta(Alert.AlertType.ERROR,
+                        "Datos inválidos: " + ex.getMessage());
             }
         });
         btnEliminar.setOnAction(e -> {
