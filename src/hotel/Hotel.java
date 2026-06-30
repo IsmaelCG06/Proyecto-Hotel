@@ -124,6 +124,16 @@ public class Hotel implements Serializable {
         return habitaciones;
     }
 
+    public ArrayList<Habitacion> listarHabitacionesPorTipo(String tipo) {
+        ArrayList<Habitacion> resultado = new ArrayList<>();
+        for (Habitacion h : habitaciones) {
+            if (h.getTipo().equalsIgnoreCase(tipo)) {
+                resultado.add(h);
+            }
+        }
+        return resultado;
+    }
+
     public Habitacion buscarHabitacionPorNumero(int num) {
         for (Habitacion h : habitaciones) {
             if (h.getNumHabitacion() == num) {

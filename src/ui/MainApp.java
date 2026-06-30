@@ -69,6 +69,7 @@ public class MainApp extends Application {
     private HBox panelMiniaturas;
     private Label lblDetalleHabitacion;
     private StackPane contenedorImagen;
+    private String imagenActual;
 
     @Override
     public void start(Stage stage) {
@@ -188,6 +189,11 @@ public class MainApp extends Application {
         previewImagen = new ImageView();
         previewImagen.setPreserveRatio(true);
         previewImagen.getStyleClass().add("room-image");
+        previewImagen.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2 && imagenActual != null) {
+                abrirVentanaImagen(imagenActual);
+            }
+        });
 
         contenedorImagen = new StackPane(previewImagen);
         contenedorImagen.setAlignment(Pos.CENTER);
@@ -249,13 +255,30 @@ public class MainApp extends Application {
         acciones.getChildren().addAll(btnAgregar, btnEliminar, btnFiltrar, btnOcupadas, btnTodas);
         acciones.setPadding(new Insets(4, 0, 16, 0));
 
+        Label lblFiltroTipo = new Label("Filtrar por tipo:");
+        lblFiltroTipo.getStyleClass().add("label-field");
+        Button btnSencillas = new Button("Sencillas");
+        btnSencillas.getStyleClass().add("btn-secondary");
+        Button btnDobles = new Button("Dobles");
+        btnDobles.getStyleClass().add("btn-secondary");
+        Button btnMatrimoniales = new Button("Matrimoniales");
+        btnMatrimoniales.getStyleClass().add("btn-secondary");
+        HBox filtroTipo = new HBox(8, lblFiltroTipo, btnSencillas, btnDobles, btnMatrimoniales);
+        filtroTipo.setPadding(new Insets(0, 0, 8, 0));
+
         btnAgregar.setOnAction(e -> agregarHabitacion(form));
         btnEliminar.setOnAction(e -> eliminarHabitacionSeleccionada());
         btnFiltrar.setOnAction(e -> filtrarDisponibles());
         btnOcupadas.setOnAction(e -> filtrarOcupadas());
         btnTodas.setOnAction(e -> actualizarTablaHabitaciones());
+        btnSencillas.setOnAction(e -> tablaHabitaciones.setItems(
+                FXCollections.observableArrayList(hotel.listarHabitacionesPorTipo("Sencilla"))));
+        btnDobles.setOnAction(e -> tablaHabitaciones.setItems(
+                FXCollections.observableArrayList(hotel.listarHabitacionesPorTipo("Doble"))));
+        btnMatrimoniales.setOnAction(e -> tablaHabitaciones.setItems(
+                FXCollections.observableArrayList(hotel.listarHabitacionesPorTipo("Matrimonial"))));
 
-        VBox panelCompleto = new VBox(16, titulo, filaSuperior, form, acciones);
+        VBox panelCompleto = new VBox(16, titulo, filaSuperior, form, filtroTipo, acciones);
         panelCompleto.setFillWidth(true);
         contentPane.getChildren().setAll(envolverConScroll(panelCompleto));
     }
@@ -513,6 +536,7 @@ public class MainApp extends Application {
     }
 
     private void cargarImagenGrande(String nombre) {
+        imagenActual = nombre;
         try {
             File img = new File("resources/images/" + nombre);
             if (img.exists()) {
@@ -523,6 +547,30 @@ public class MainApp extends Application {
         } catch (Exception e) {
             previewImagen.setImage(null);
         }
+    }
+
+    private void abrirVentanaImagen(String nombre) {
+        Stage ventana = new Stage();
+        ventana.setTitle("Imagen - " + nombre);
+        ImageView imgView = new ImageView();
+        imgView.setPreserveRatio(true);
+        try {
+            File img = new File("resources/images/" + nombre);
+            if (img.exists()) {
+                Image imagen = new Image(img.toURI().toString(), true);
+                imgView.setImage(imagen);
+                ventana.setWidth(Math.min(imagen.getWidth() + 760, 1400));
+                ventana.setHeight(Math.min(imagen.getHeight() + 800, 1000));
+            }
+        } catch (Exception e) {
+            imgView.setImage(null);
+        }
+        StackPane root = new StackPane(imgView);
+        root.setStyle("-fx-background-color: #1a1a1a;");
+        Scene scene = new Scene(root);
+        ventana.getIcons().add(previewImagen.getImage());
+        ventana.setScene(scene);
+        ventana.show();
     }
 
     // --- Panel Clientes ---
